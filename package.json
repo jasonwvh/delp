@@ -2,14 +2,21 @@
   "name": "delp",
   "version": "0.1.0",
   "private": true,
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@truffle/contract": "^4.3.29",
     "core-js": "^3.6.5",
-    "vue": "^3.0.0"
+    "truffle": "^5.4.5",
+    "vue": "^3.0.0",
+    "web3": "^1.5.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
