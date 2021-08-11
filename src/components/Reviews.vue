@@ -3,7 +3,12 @@
     <span> Showing recommendations for <span v-if="city"> {{ city }} </span> </span>
     <div class="cards">
       <article class="card" v-for="review in reviews" :key="review.id">
+        <div class="content">
           {{review.content}}
+        </div>
+        <div class="tip">
+          <button @click="sendTips(review.author)">Send Tips</button>
+        </div>
       </article>
     </div>
 
@@ -40,13 +45,10 @@ export default {
     },
   async created() {
     try {
-      // Get network provider and web3 instance.
       const web3 = await getWeb3();
 
-      // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
 
-      // Get the contract instance.
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = Reviews.networks[networkId];
       const contract = new web3.eth.Contract(
@@ -64,7 +66,6 @@ export default {
       
       this.getReviews();
     } catch (error) {
-      // Catch any errors for any of the above operations.
       console.log(
         `Failed to load web3, accounts, or contract. Check console for details.`,
       );
@@ -78,6 +79,7 @@ export default {
       for (var i=1; i <= reviewCount; i++) {
         let tmp;
         const response = await this.contract.methods.getReviewsById(i).call();
+
         // filter by city
         if (response[2] != this.city) continue;
 
@@ -85,16 +87,19 @@ export default {
           id: response[0],
           content: response[1],
           city: response[2],
+          author: response[3],
         }
-
         console.log(tmp)
-
         this.reviews.push(tmp);
       }
     },
     async createReview(content) {
-      console.log(this.city)
-      await this.contract.methods.createReview(content, this.city).send({from: this.accounts[0] });
+      await this.contract.methods.createReview(content, this.city, this.accounts[0]).send({from: this.accounts[0] });
+    },
+    async sendTips(author) {
+      console.log(author)
+
+      this.web3.eth.sendTransaction({from: this.accounts[0], to:author, value:this.web3.utils.toWei('5', "ether")});
     }
   }
 }
