@@ -1,6 +1,5 @@
 <template>
   <div class="search">
-    
   </div>
 </template>
 
@@ -8,12 +7,15 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "HelloWorld",
+  name: "Search",
   props: {
-    msg: String,
+    country: {
+      type: String,
+      default: "Malaysia"
+    },
   },
   created() {
-    this.getCountries();
+    this.getCities("Malaysia");
   },
   methods: {
     getHello: async () => {
@@ -23,8 +25,8 @@ export default defineComponent({
         })
       );
     },
-    getCities: async () => {
-      fetch("http://localhost:3000/cities").then((response) =>
+    getCities: async (country: string) => {
+      fetch(`http://localhost:3000/${country}/cities`).then((response) =>
         response.json().then((data) => {
           console.log(data);
         })

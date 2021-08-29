@@ -11,16 +11,24 @@ client.on("error", function (err) {
     console.log("Error:", err);
 });
 
+app.get("/:country/cities", (req, res) => {
+    res.setHeader("Content-Type", "application/json");
+
+    client.lrange([req.params.country, 0, -1], function(err, cities) {
+        res.send(cities)
+    })
+})
+
 app.get("/countries", (req, res) => {
     res.setHeader("Content-Type", "application/json");
 
-    client.hgetall("all-cities", function(err, cities) {
+    client.hgetall("all-countries", function(err, cities) {
         const unique = [...new Set(Object.values(cities))]
         res.send(unique)
     })
 })
 
-app.get("/cities", (req, res) => {
+app.get("/all", (req, res) => {
     res.setHeader("Content-Type", "application/json");
 
     client.hgetall("all-cities", function (err, cities) {
