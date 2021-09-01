@@ -1,22 +1,31 @@
 <template>
-  <div class="search">
+  <div class="container">
+    <div class="banner">
+      <Banner />
+    </div>
+    <div class="recents">
+      <Recents />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import Banner from "../components/Banner.vue";
+import Recents from "../components/Recents.vue"
 
 export default defineComponent({
-  name: "Search",
+  name: "Homepage",
   props: {
     country: {
       type: String,
-      default: "Malaysia"
+      default: "Malaysia",
     },
   },
-  created() {
-    this.getCities("Malaysia");
+  components: {
+    Banner, Recents,
   },
+  created() {},
   methods: {
     getHello: async () => {
       fetch("http://localhost:3000/hello").then((response) =>
@@ -43,7 +52,9 @@ export default defineComponent({
 });
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.banner {
+  height: 100vh;
+  width: 100vw;
+}
 </style>

@@ -1,26 +1,27 @@
 <template>
   <v-app>
     <v-main>
-      <Search country="Malaysia" />
+      <router-link to="/">Home</router-link> |
+      <router-link to="/place">Place</router-link>
     </v-main>
+    <router-view />
   </v-app>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import Search from "./components/Search.vue";
 
 export default defineComponent({
   name: "App",
 
   components: {
-    Search,
+
   },
 
   data() {
     return {
-      //
     };
   },
+
 });
 </script>
