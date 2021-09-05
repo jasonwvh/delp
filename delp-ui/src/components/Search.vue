@@ -61,16 +61,14 @@ export default class Search extends Vue {
 
   mounted(): void {
     this.getCountries();
-    if (this.country !== undefined) {
+    if (this.country !== undefined || this.country !== "") {
       this.getCities();
     }
   }
 
   private getCities() {
-    console.log("fetching cities");
     fetch(`http://localhost:3000/${this.country}/cities`).then((cities) =>
       cities.json().then((data) => {
-        console.log(data);
         this.cityList = data;
       })
     );
@@ -79,7 +77,6 @@ export default class Search extends Vue {
   private getCountries() {
     fetch("http://localhost:3000/countries").then((countries) =>
       countries.json().then((data) => {
-        console.log(data);
         this.countryList = data;
       })
     );

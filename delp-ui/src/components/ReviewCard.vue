@@ -9,6 +9,10 @@
     <v-card-text class="text-wrap">
       {{ content }}
     </v-card-text>
+    <v-card-actions>
+      <v-spacer />
+      <v-btn text @click="onTip"> Tip </v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -25,6 +29,10 @@ export default class ReviewCard extends Vue {
 
   @Prop({ default: "" })
   content!: string;
+
+  private onTip() {
+    this.$emit("send-tip");
+  }
 }
 </script>
 

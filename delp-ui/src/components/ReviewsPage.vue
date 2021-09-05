@@ -11,6 +11,7 @@
             :author="comment.authorName"
             :date="comment.date"
             :content="comment.content"
+            @send-tip="sendTips(comment.authorAddress, '5')"
           />
         </v-col>
       </v-row>
@@ -95,6 +96,8 @@ export default class ReviewsPage extends Vue {
       this.accounts = accounts;
       this.contract = contract;
 
+      console.log(accounts);
+
       this.getReviews();
     } catch (error) {
       console.error(error);
@@ -102,6 +105,8 @@ export default class ReviewsPage extends Vue {
   }
 
   private async getReviews() {
+    this.comments = [];
+
     const reviewCount = await this.contract.methods.reviewCount().call();
 
     for (var i = 1; i <= reviewCount; i++) {
@@ -161,11 +166,11 @@ export default class ReviewsPage extends Vue {
     this.getReviews();
   }
 
-  private async sendTips(authorAddress: string, amount: number) {
+  private async sendTips(authorAddress: string, amount: string) {
     this.web3.eth.sendTransaction({
       from: this.accounts[0],
       to: authorAddress,
-      value: this.web3.utils.toWei(amount, "ether"),
+      value: this.web3.utils.toWei(amount, "wei"),
     });
   }
 }
