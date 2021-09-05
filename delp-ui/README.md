@@ -1,4 +1,4 @@
-# client
+# delp-ui
 
 ## Project setup
 ```

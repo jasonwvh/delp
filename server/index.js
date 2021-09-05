@@ -15,6 +15,7 @@ app.get("/:country/cities", (req, res) => {
     res.setHeader("Content-Type", "application/json");
 
     client.lrange([req.params.country, 0, -1], function(err, cities) {
+        console.log(req.params.country, cities);
         res.send(cities)
     })
 })
@@ -23,7 +24,7 @@ app.get("/countries", (req, res) => {
     res.setHeader("Content-Type", "application/json");
 
     client.hgetall("all-countries", function(err, cities) {
-        const unique = [...new Set(Object.values(cities))]
+        const unique = [...new Set(Object.keys(cities))]
         res.send(unique)
     })
 })
