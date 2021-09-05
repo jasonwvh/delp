@@ -1,11 +1,10 @@
 <template>
   <div>
     <header>
-    <toolbar />
+      <toolbar />
     </header>
     <place-details :place="city" />
-    <reviews :place="city"/>
-    
+    <reviews-page :place="city" />
   </div>
 </template>
 
@@ -13,10 +12,10 @@
 import { Component, Vue } from "vue-property-decorator";
 import Toolbar from "../components/Toolbar.vue";
 import PlaceDetails from "../components/PlaceDetails.vue";
-import Reviews from "../components/Reviews.vue";
+import ReviewsPage from "../components/ReviewsPage.vue";
 
 @Component({
-  components: { Toolbar, PlaceDetails, Reviews },
+  components: { Toolbar, PlaceDetails, ReviewsPage },
 })
 export default class Home extends Vue {
   private city = this.$route.params.city;
@@ -24,5 +23,4 @@ export default class Home extends Vue {
 </script>
 
 <style scoped>
-
 </style>

@@ -1,11 +1,11 @@
 {
     "server": {
       "baseDir": [
-        "./frontend/src",
-        "./frontend/build/contracts"
+        "./delp-ui/src",
+        "./delp-ui/build/contracts"
       ],
       "routes": {
-        "/vendor": "./frontend/node_modules"
+        "/vendor": "./delp-ui/node_modules"
       }
     }
   }

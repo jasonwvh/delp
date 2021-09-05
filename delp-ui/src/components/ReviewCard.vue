@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="3" height="420" width="420">
+  <v-card elevation="3" height="420" width="420" min-width="240">
     <v-card-title>
       <p>{{ author }}</p>
     </v-card-title>
