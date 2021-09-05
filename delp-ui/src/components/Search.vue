@@ -53,15 +53,17 @@ import router from "../router";
 
 @Component
 export default class Search extends Vue {
-  private country = "Malaysia";
+  private country = "";
   private countryList: string[] = [];
 
-  private city = "Kuala Lumpur";
+  private city = "";
   private cityList: string[] = [];
 
-  created() {
+  mounted() {
     this.getCountries();
-    this.getCities();
+    if (this.country !== undefined) {
+      this.getCities();
+    }
   }
 
   private getCities() {
@@ -84,8 +86,8 @@ export default class Search extends Vue {
   }
 
   private onSelectCity() {
-    console.log("going to", this.city);
-    this.$router.push({ path: `/place/${this.city}` });
+    this.$router.push({ path: `/place/${this.country}/${this.city}` });
+    this.$router.go(0);
   }
 }
 </script>

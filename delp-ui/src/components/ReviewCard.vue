@@ -7,7 +7,7 @@
       <p>{{ date }}</p>
     </v-card-subtitle>
     <v-card-text class="text-wrap">
-      {{ text }}
+      {{ content }}
     </v-card-text>
   </v-card>
 </template>
@@ -24,7 +24,7 @@ export default class ReviewCard extends Vue {
   date!: string;
 
   @Prop({ default: "" })
-  text!: string;
+  content!: string;
 }
 </script>
 

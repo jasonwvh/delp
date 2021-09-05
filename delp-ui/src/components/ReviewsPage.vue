@@ -8,9 +8,9 @@
       <v-row>
         <v-col lg="4" md="6" sm="12" v-for="(comment, i) in comments" :key="i">
           <review-card
-            :author="comment.author"
+            :author="comment.authorName"
             :date="comment.date"
-            :text="comment.text"
+            :content="comment.content"
           />
         </v-col>
       </v-row>
@@ -30,7 +30,10 @@
               <span> Name (optional) </span>
             </v-col>
             <v-col cols="9" justify="center" align="center">
-              <v-text-field v-model="newComment.author" placeholder="Sam Smith">
+              <v-text-field
+                v-model="commentInput.authorName"
+                placeholder="Sam Smith"
+              >
               </v-text-field>
             </v-col>
           </v-row>
@@ -40,7 +43,7 @@
             </v-col>
             <v-col cols="9">
               <v-textarea
-                v-model="newComment.text"
+                v-model="commentInput.content"
                 placeholder="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
               >
               </v-textarea>
@@ -62,18 +65,14 @@ import ReviewCard from "./ReviewCard.vue";
 import CommentInterface from "../interface/CommentInterface";
 import getWeb3 from "../web3/getWeb3";
 import ReviewsJSON from "../contracts/Reviews.json";
+import moment from "moment";
 
 @Component({ components: { ReviewCard } })
 export default class ReviewsPage extends Vue {
   @Prop()
-  place = "Kuala Lumpur";
+  place: string;
 
-  private newComment: CommentInterface = {
-    author: "",
-    date: "",
-    text: "",
-    place: "",
-  };
+  private commentInput = {} as CommentInterface;
 
   private comments: CommentInterface[] = [];
 
@@ -83,11 +82,8 @@ export default class ReviewsPage extends Vue {
 
   async created() {
     try {
-      console.log(ReviewsJSON);
       const web3 = await getWeb3();
-
       const accounts = await web3.eth.getAccounts();
-
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = ReviewsJSON.networks[networkId];
       const contract = new web3.eth.Contract(
@@ -95,65 +91,81 @@ export default class ReviewsPage extends Vue {
         deployedNetwork && deployedNetwork.address
       );
 
-      console.log(web3);
-      console.log(accounts);
-      console.log(contract);
-
       this.web3 = web3;
       this.accounts = accounts;
       this.contract = contract;
 
       this.getReviews();
     } catch (error) {
-      console.log(
-        `Failed to load web3, accounts, or contract. Check console for details.`
-      );
       console.error(error);
     }
   }
 
   private async getReviews() {
-    const reviewCount = await this.contract.methods
-      .reviewCount()
-      .call(function (err, res) {
-        console.log(err, res);
-      });
-    console.log(reviewCount);
+    const reviewCount = await this.contract.methods.reviewCount().call();
+
     for (var i = 1; i <= reviewCount; i++) {
       let tmp: {
-        /*id: any;*/ text: string;
+        authorName: string;
+        authorAddress: string;
+        content: string;
         date: string;
         place: string;
-        author: string;
       };
+
       const response = await this.contract.methods.getReviewsById(i).call();
-      console.log(response);
-      //if (response[2] != this.place) continue;
+
+      if (response[5] != this.place) continue;
 
       tmp = {
-        //id: response[0],
-        date: response[0],
-        text: response[1],
-        place: response[2],
-        author: response[2],
+        authorName: response[1],
+        authorAddress: response[2],
+        content: response[3],
+        date: response[4],
+        place: response[5],
       };
-      console.log(tmp);
+
       this.comments.push(tmp);
     }
   }
   private async postReview() {
-    console.log(this.contract);
-    await this.contract.methods
-      .createReview(this.newComment.text, this.place)
-      .send({ from: this.accounts[0] });
-  }
-  private async sendTips(author: any) {
-    console.log(author);
+    let name: string;
+    if (
+      this.commentInput.authorName == null ||
+      this.commentInput.authorName == undefined ||
+      this.commentInput.authorName.length == 0
+    ) {
+      name = "Anonymous";
+    } else {
+      name = this.commentInput.authorName;
+    }
 
+    const comment: CommentInterface = {
+      authorName: name,
+      authorAddress: this.accounts[0],
+      content: this.commentInput.content,
+      date: moment(Date.now()).format("Do MMMM YYYY"),
+      place: this.place,
+    };
+
+    await this.contract.methods
+      .createReview(
+        comment.authorName,
+        comment.authorAddress,
+        comment.content,
+        comment.date,
+        comment.place
+      )
+      .send({ from: this.accounts[0] });
+
+    this.getReviews();
+  }
+
+  private async sendTips(authorAddress: string, amount: number) {
     this.web3.eth.sendTransaction({
       from: this.accounts[0],
-      to: author,
-      value: this.web3.utils.toWei("5", "ether"),
+      to: authorAddress,
+      value: this.web3.utils.toWei(amount, "ether"),
     });
   }
 }

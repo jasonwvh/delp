@@ -15,9 +15,12 @@ import { Carousel, Slide } from "vue-carousel";
 @Component({ components: { Carousel, Slide } })
 export default class PlaceDetails extends Vue {
   @Prop()
-  place = "Kuala Lumpur";
+  place: string;
 
-  private images = `https://source.unsplash.com/720x720/?${this.place}?sig=`;
+  @Prop()
+  country: string;
+
+  private images = `https://source.unsplash.com/720x720/?${this.place},${this.country}?sig=`;
 }
 </script>
 

@@ -1,6 +1,7 @@
 export default interface CommentInterface {
-    author: string;
+    authorName?: string;
+    authorAddress?: string;
+    content: string;
     date: string;
-    text: string;
     place: string;
 }

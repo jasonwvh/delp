@@ -12,7 +12,7 @@ const routes: Array<RouteConfig> = [
     component: Home
   },
   {
-    path: '/place/:city',
+    path: '/place/:country/:city',
     name: 'Place',
     props: true,
     component: Place

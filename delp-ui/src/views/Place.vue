@@ -3,7 +3,7 @@
     <header>
       <toolbar />
     </header>
-    <place-details :place="city" />
+    <place-details :place="city" :country="country" />
     <reviews-page :place="city" />
   </div>
 </template>
@@ -18,6 +18,7 @@ import ReviewsPage from "../components/ReviewsPage.vue";
   components: { Toolbar, PlaceDetails, ReviewsPage },
 })
 export default class Home extends Vue {
+  private country = this.$route.params.country;
   private city = this.$route.params.city;
 }
 </script>
