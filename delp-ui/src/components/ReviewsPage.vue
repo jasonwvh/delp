@@ -70,7 +70,7 @@ import moment from "moment";
 @Component({ components: { ReviewCard } })
 export default class ReviewsPage extends Vue {
   @Prop()
-  place: string;
+  place!: string;
 
   private commentInput = {} as CommentInterface;
 
@@ -80,7 +80,7 @@ export default class ReviewsPage extends Vue {
   private accounts: any[] = [];
   private contract: any = {};
 
-  async created() {
+  async created(): Promise<void> {
     try {
       const web3 = await getWeb3();
       const accounts = await web3.eth.getAccounts();

@@ -59,7 +59,7 @@ export default class Search extends Vue {
   private city = "";
   private cityList: string[] = [];
 
-  mounted() {
+  mounted(): void {
     this.getCountries();
     if (this.country !== undefined) {
       this.getCities();
